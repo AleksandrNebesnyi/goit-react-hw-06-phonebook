@@ -1,16 +1,13 @@
-import {useState} from 'react';
+import { connect } from 'react-redux'; // Импорт функции коннекта к хранилищу
+import contactsActions from '../../redux/contact/contacts-actions'; // Импорт экшенов из контактов
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid'
-import {Form, Label, Input, Button} from './ContactForm.styled'
+import { nanoid } from 'nanoid';
+import { Form, Label, Input, Button } from './ContactForm.styled';
 
-
-
-const ContactForm =({onSubmit})=>{
-
-
+const ContactForm = ({ onSubmit }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -29,7 +26,7 @@ const ContactForm =({onSubmit})=>{
     }
   };
   // Метод на отправке формы. Формирует из стейта контакт и передает во внешний метод
- const  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
 
     const contact = {
@@ -37,22 +34,36 @@ const ContactForm =({onSubmit})=>{
       name: name,
       number: number,
     };
-     
+
     onSubmit(contact); // Внешний метод в пропсах класса
 
     resetForm();
   };
 
   // Сброс полей формы (после отправки)
- const resetForm = () => {
-  setName('');
-  setNumber('');
+  const resetForm = () => {
+    setName('');
+    setNumber('');
   };
 
+  // Добавляет контакт
+  // const addContact = newContact => {
+  //   // Проверка на дубликат
+  //   const duplicateName = contacts.find(
+  //     contact => contact.name.toLowerCase() === newContact.name.toLowerCase(),
+  //   );
+  //   if (duplicateName) {
+  //     toast.warn(`${newContact.name} is already on contacts`);
+
+  //     return;
+  //   }
+
+  //   setContacts([...contacts, newContact]);
+  // };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Label >
+      <Label>
         Name
         <Input
           type="text"
@@ -66,7 +77,7 @@ const ContactForm =({onSubmit})=>{
           required
         />
       </Label>
-      <Label >
+      <Label>
         Number
         <Input
           type="tel"
@@ -80,17 +91,25 @@ const ContactForm =({onSubmit})=>{
           required
         />
       </Label>
-     
-        <Button type="submit" >
-          Add contact
-        </Button>
-      
-    </Form>)
 
-}
+      <Button type="submit">Add contact</Button>
+    </Form>
+  );
+};
 
-ContactForm.propTypes ={
-  onSubmit : PropTypes.func.isRequired,
-}
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 
-  export default ContactForm;
+// Из глобального стейта в пропы компонента
+const mapStateToProps = state => ({
+  contacts: state.contacts.items,
+});
+
+// Из глобального стейта в пропы компонента - методы
+const mapDispatchToProps = dispatch => ({
+  onSubmit: (name, number) =>
+    dispatch(contactsActions.addContact(name, number)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
