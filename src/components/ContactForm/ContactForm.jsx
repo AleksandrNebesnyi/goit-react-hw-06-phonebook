@@ -3,9 +3,10 @@ import contactsActions from '../../redux/contact/contacts-actions'; // Импо�
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
+import { toast } from 'react-toastify';
 import { Form, Label, Input, Button } from './ContactForm.styled';
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = ({ onSubmit, contacts }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -25,17 +26,20 @@ const ContactForm = ({ onSubmit }) => {
         return;
     }
   };
+
+  // Проверка на дубликат
+  const duplicateName = contacts.find(
+    contact => contact.name === name.toLowerCase(),
+  );
+
   // Метод на отправке формы. Формирует из стейта контакт и передает во внешний метод
   const handleSubmit = event => {
     event.preventDefault();
-
-    const contact = {
-      id: nanoid(),
-      name: name,
-      number: number,
-    };
-
-    onSubmit(contact); // Внешний метод в пропсах класса
+    if (duplicateName) {
+      toast.warn(`${name} is already on contacts`);
+      return;
+    }
+    onSubmit(name.toLowerCase(), number); // Внешний метод через mapDispatchToProp
 
     resetForm();
   };
@@ -45,21 +49,6 @@ const ContactForm = ({ onSubmit }) => {
     setName('');
     setNumber('');
   };
-
-  // Добавляет контакт
-  // const addContact = newContact => {
-  //   // Проверка на дубликат
-  //   const duplicateName = contacts.find(
-  //     contact => contact.name.toLowerCase() === newContact.name.toLowerCase(),
-  //   );
-  //   if (duplicateName) {
-  //     toast.warn(`${newContact.name} is already on contacts`);
-
-  //     return;
-  //   }
-
-  //   setContacts([...contacts, newContact]);
-  // };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -111,5 +100,4 @@ const mapDispatchToProps = dispatch => ({
   onSubmit: (name, number) =>
     dispatch(contactsActions.addContact(name, number)),
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

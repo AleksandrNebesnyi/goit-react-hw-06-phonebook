@@ -13,35 +13,24 @@ const ContactList = ({ contacts, onDeleteContact }) => {
         <ContactItem
           key={contact.id}
           contact={contact}
-          onDeleteContact={onDeleteContact}
+          onDeleteContact={() => onDeleteContact(contact.id)}
         />
       ))}
     </List>
   );
 };
 
-// // Фильтрует и возвращает результат фильтра
-const getfilteredContacts = (contacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-
-  return contacts.filter(({ name }) =>
-    name.toLowerCase().includes(normalizedFilter),
-  );
-};
 // Фильтрует и возвращает результат фильтра
-
-// const filterContacts = useMemo(() => {
-//   const normalizedFilter = filter.toLowerCase();
-
-//   if (filter !== '') {
-//     return contacts.filter(contact =>
-//       contact.name.toLowerCase().includes(normalizedFilter),
-//     );
-//   } else {
-//     return contacts;
-//   }
-// }, [contacts, filter]);
-
+const getfilteredContacts = (allContacts, filter) => {
+  const normalizedFilter = filter.toLowerCase();
+  if (filter !== '') {
+    return allContacts.filter(({ name }) =>
+      name.toLowerCase().includes(normalizedFilter),
+    );
+  } else {
+    return allContacts;
+  }
+};
 // Из стейта в пропы + в контакты пишет результат функции фильтра
 const mapStateToProps = ({ contacts: { items, filter } }) => ({
   contacts: getfilteredContacts(items, filter),

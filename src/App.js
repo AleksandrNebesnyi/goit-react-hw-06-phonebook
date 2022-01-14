@@ -1,10 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
 import Container from './components/Container/Container.jsx';
 import Section from './components/Section/Section.jsx';
 import ContactForm from './components/ContactForm/ContactForm.jsx';
 import ContactList from './components/ContactList/ContactList.jsx';
 import ContactsFilter from './components/ContactsFilter/ContactsFilter.jsx';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
