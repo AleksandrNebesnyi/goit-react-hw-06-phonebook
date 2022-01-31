@@ -1,8 +1,8 @@
-import Container from './components/Container/Container.jsx';
-import Section from './components/Section/Section.jsx';
-import ContactForm from './components/ContactForm/ContactForm.jsx';
-import ContactList from './components/ContactList/ContactList.jsx';
-import ContactsFilter from './components/ContactsFilter/ContactsFilter.jsx';
+import Container from 'components/Container/Container.jsx';
+import Section from 'components/Section/Section.jsx';
+import ContactForm from 'components/ContactForm/ContactForm.jsx';
+import ContactList from 'components/ContactList/ContactList.jsx';
+import ContactsFilter from 'components/ContactsFilter/ContactsFilter.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

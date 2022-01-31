@@ -1,12 +1,15 @@
-import { connect } from 'react-redux';
-import contactsActions from '../../redux/contact/contacts-actions';
-import { List } from './ContactList.styled';
-import PropTypes from 'prop-types';
-import ContactItem from '../ContactItem/ContactItem';
+import { useSelector, useDispatch } from 'react-redux'; // Импортируем хуки для использования стейта и доставки экшинов прямо в компоненте
+import { getfilteredContacts } from 'redux/contact/contacts-selector'; // Импортируем части стейта из selector
+import contactsActions from 'redux/contact/contacts-actions'; // Импортируем экшны для диспатча
+import { List } from './ContactList.styled'; //Стили
+import ContactItem from '../ContactItem/ContactItem'; //Компонент одного контакта
 
-// Принимает все контакты и пробрасывает дальше метод для удаления контакта
+// Принимает все отфильтрованные контакты и пробрасывает дальше метод для удаления контакта
 
-const ContactList = ({ contacts, onDeleteContact }) => {
+const ContactList = () => {
+  const contacts = useSelector(getfilteredContacts);
+  const dispatch = useDispatch();
+  const onDeleteContact = id => dispatch(contactsActions.deleteContact(id));
   return (
     <List>
       {contacts.map(contact => (
@@ -21,28 +24,30 @@ const ContactList = ({ contacts, onDeleteContact }) => {
 };
 
 // Фильтрует и возвращает результат фильтра
-const getfilteredContacts = (allContacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-  if (filter !== '') {
-    return allContacts.filter(({ name }) =>
-      name.toLowerCase().includes(normalizedFilter),
-    );
-  } else {
-    return allContacts;
-  }
-};
-// Из стейта в пропы + в контакты пишет результат функции фильтра
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  contacts: getfilteredContacts(items, filter),
-});
+// const getfilteredContacts = (allContacts, filter) => {
+//   const normalizedFilter = filter.toLowerCase();
+//   if (filter !== '') {
+//     return allContacts.filter(({ name }) =>
+//       name.toLowerCase().includes(normalizedFilter),
+//     );
+//   } else {
+//     return allContacts;
+//   }
+// };
+// // Из стейта в пропы + в контакты пишет результат функции фильтра
+// const mapStateToProps = ({ contacts: { items, filter } }) => ({
+//   contacts: getfilteredContacts(items, filter),
+// });
 
-// Из стейта в пропы - методы
-const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(contactsActions.deleteContact(id)),
-});
+// // Из стейта в пропы - методы
+// const mapDispatchToProps = dispatch => ({
+//   onDeleteContact: id => dispatch(contactsActions.deleteContact(id)),
+// });
 
-ContactList.propTypes = {
-  onDeleteContact: PropTypes.func,
-};
+// ContactList.propTypes = {
+//   onDeleteContact: PropTypes.func,
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+// export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+
+export default ContactList;

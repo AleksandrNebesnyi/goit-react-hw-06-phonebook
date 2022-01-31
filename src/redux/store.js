@@ -44,5 +44,5 @@ const store = configureStore({
 const persistor = persistStore(store);
 
 // Экспорт хранилища и обёртки хранилища
-
+// eslint-disable-next-line
 export default { store, persistor };

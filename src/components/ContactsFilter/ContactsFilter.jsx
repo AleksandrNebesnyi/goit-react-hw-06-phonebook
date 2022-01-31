@@ -1,17 +1,26 @@
-import { connect } from 'react-redux'; // Импортируем коннект для глобального хранилища
-import contactsActions from '../../redux/contact/contacts-actions'; // Импортируем экшны для диспатча
-import PropTypes from 'prop-types';
-import { Form, Label, Input } from './ContactsFilter.styled';
+import { useSelector, useDispatch } from 'react-redux'; // Импортируем хуки для использования стейта и доставки экшинов прямо в компоненте
+import contactsActions from 'redux/contact/contacts-actions'; // Импортируем экшны для диспатча
+import { getFilter } from 'redux/contact/contacts-selector'; // Импортируем части стейта из selector
+import { Form, Label, Input } from './ContactsFilter.styled'; //Стили
 
 // Принимает значение с поля фильтра и метод пишущий в стейт
 
-const ContactsFilter = ({ filter, onFilter }) => {
+const ContactsFilter = () => {
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
   return (
     <>
       <Form>
         <Label>
           <h3>Find contacts by name:</h3>
-          <Input type="text" value={filter} onChange={onFilter} />
+          <Input
+            type="text"
+            value={filter}
+            onChange={event =>
+              dispatch(contactsActions.changeFilter(event.currentTarget.value))
+            }
+          />
         </Label>
       </Form>
     </>
@@ -19,19 +28,14 @@ const ContactsFilter = ({ filter, onFilter }) => {
 };
 
 // Из стейта в пропы
-const mapStateToProps = state => ({
-  filter: state.contacts.filter,
-});
+// const mapStateToProps = state => ({
+//   filter: state.contacts.filter,
+// });
 
 // Из стейта в пропы - методы
-const mapDispatchToProps = distatch => ({
-  onFilter: event =>
-    distatch(contactsActions.changeFilter(event.currentTarget.value)),
-});
+// const mapDispatchToProps = distatch => ({
+//   onFilter: event =>
+//     distatch(contactsActions.changeFilter(event.currentTarget.value)),
+// });
 
-ContactsFilter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  onFilter: PropTypes.func.isRequired,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsFilter);
+export default ContactsFilter;
